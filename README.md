@@ -9,8 +9,6 @@ A loyalty program to reward and retain customers.
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 - [TODO](#todo)
 
@@ -70,4 +68,4 @@ Here are some tasks that need to be completed or considered for the Loyalty Prog
 - [ ] Improve security by adding user authentication and authorization.
 - [ ] Enhance the program's data analytics and reporting capabilities.
 
-Feel free to pick up any of these tasks or add your own as the project evolves.
+ 
