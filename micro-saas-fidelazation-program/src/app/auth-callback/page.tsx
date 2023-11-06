@@ -11,21 +11,18 @@ const Page = () => {
     const origin = searchParams.get('origin')
 
 
-    trpc.authCallback.useQuery(undefined, {
-        onSuccess: ({ success }) => {
-            if (success) {
-                router.push(origin ? `/${origin}` : '/dashboard')
-            }
-        },
-        onError: (err) => {
-            if (err.data?.code === 'UNAUTHORIZED') {
-                router.push('/sign-in')
-            }
-        },
-        retry: true,
-        retryDelay: 500
+    const { isError, isSuccess } =
+        trpc.authCallback.useQuery(undefined, {
+            retry: true,
+            retryDelay: 500
+        })
+    if (isSuccess) {
+        router.push(origin ? `/${origin}` : '/dashboard')
     }
-    )
+    if (!isError) {
+        router.push('/api/auth/login')
+    }
+
     return (
         <div className='w-full mt-24 flex justify-center'>
             <div className='flex flex-col items-center gap-2'>

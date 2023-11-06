@@ -12,6 +12,54 @@ datasource db {
 }
 
 model User {
-  id    String @id @unique
-  email String @unique
+  id           String        @id @unique
+  name         String?
+  email        String        @unique
+  created_at   DateTime      @default(now())
+  role         String
+  picture      String?
+  UserPrograms UserProgram[]
+}
+
+model UserProgram {
+  id         String   @id @default(cuid())
+  name       String
+  isActive   Boolean  @default(true)
+  isDeleted  Boolean  @default(false)
+  comment    String?
+  created_at DateTime @default(now())
+  updated_at DateTime
+  userId     String
+  programId  String
+  pointsId   String
+  User       User     @relation(fields: [userId], references: [id])
+  Program    Program  @relation(fields: [programId], references: [id])
+  Points     Points   @relation(fields: [pointsId], references: [id])
+}
+
+model Program {
+  id           String        @id @default(cuid())
+  name         String
+  description  String?
+  programRules String
+  isActive     Boolean       @default(true)
+  isDeleted    Boolean       @default(false)
+  startDate    DateTime?
+  endDate      DateTime?
+  created_at   DateTime      @default(now())
+  updated_at   DateTime
+  userCreate   String
+  userUpdate   String?
+  UserPrograms UserProgram[]
+}
+
+model Points {
+  id              String        @id @default(cuid())
+  transactionType String
+  pointsAmount    Int           @default(0)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime
+  userCreate      String
+  userUpdate      String?
+  UserProgram     UserProgram[]
 }
