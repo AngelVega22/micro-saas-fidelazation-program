@@ -15,7 +15,7 @@ export default function Home() {
         </div>
         <h1 className='max-w-4xl text-5xl font-bold md:text-6xl lg:text-7xl'>
           Lealtad al Instante,{' '}
-          <span className='text-blue-600'>  Clientes Felices</span>{' '}
+          <span className='text-orange-600'>  Clientes Felices</span>{' '}
           en segundos.
         </h1>
         <p className='mt-5 max-w-prose text-zinc-700 sm:text-lg'>
@@ -93,7 +93,7 @@ export default function Home() {
         <ol className='my-8 space-y-4 pt-8 md:flex md:space-x-12 md:space-y-0'>
           <li className='md:flex-1'>
             <div className='flex flex-col space-y-2 border-l-4 border-zinc-300 py-2 pl-4 md:border-l-0 md:border-t-2 md:pb-0 md:pl-0 md:pt-4'>
-              <span className='text-sm font-medium text-blue-600'>
+              <span className='text-sm font-medium text-orange-600'>
                 Paso 1
               </span>
               <span className='text-xl font-semibold'>
@@ -104,7 +104,7 @@ export default function Home() {
                 elige nuestro{' '}
                 <Link
                   href='/pricing'
-                  className='text-blue-700 underline underline-offset-2'>
+                  className='text-orange-700 underline underline-offset-2'>
                   plan pro
                 </Link>
                 .
@@ -113,7 +113,7 @@ export default function Home() {
           </li>
           <li className='md:flex-1'>
             <div className='flex flex-col space-y-2 border-l-4 border-zinc-300 py-2 pl-4 md:border-l-0 md:border-t-2 md:pb-0 md:pl-0 md:pt-4'>
-              <span className='text-sm font-medium text-blue-600'>
+              <span className='text-sm font-medium text-orange-600'>
                 Paso 2
               </span>
               <span className='text-xl font-semibold'>
@@ -126,7 +126,7 @@ export default function Home() {
           </li>
           <li className='md:flex-1'>
             <div className='flex flex-col space-y-2 border-l-4 border-zinc-300 py-2 pl-4 md:border-l-0 md:border-t-2 md:pb-0 md:pl-0 md:pt-4'>
-              <span className='text-sm font-medium text-blue-600'>
+              <span className='text-sm font-medium text-orange-600'>
                 Paso 3
               </span>
               <span className='text-xl font-semibold'>

@@ -27,7 +27,6 @@ const Dashboard = () => {
         }
     })
 
-
     return (
         <main className='mx-auto max-w-7xl md:p-10 '>
             <div className='mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0'>
@@ -55,7 +54,7 @@ const Dashboard = () => {
                                             className="flex flex-col gap-2"
                                         >
                                             <div className='pt-6 px-6 flex w-full items-center justify-between space-x-6'>
-                                                <div className='h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-blue-500 to-blue-700' />
+                                                <div className='h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-orange-400 to-orange-700' />
                                                 <div className='flex-1 truncate'>
                                                     <div className='flex items-center space-x-3'>
                                                         <h3 className='truncate text-lg font-medium text-zinc-900'>

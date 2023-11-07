@@ -16,25 +16,25 @@ model User {
   name         String?
   email        String        @unique
   created_at   DateTime      @default(now())
-  role         String
+  role         Role          @default(USER)
   picture      String?
   UserPrograms UserProgram[]
 }
 
 model UserProgram {
-  id         String   @id @default(cuid())
-  name       String
-  isActive   Boolean  @default(true)
-  isDeleted  Boolean  @default(false)
-  comment    String?
-  created_at DateTime @default(now())
-  updated_at DateTime
-  userId     String
-  programId  String
-  pointsId   String
-  User       User     @relation(fields: [userId], references: [id])
-  Program    Program  @relation(fields: [programId], references: [id])
-  Points     Points   @relation(fields: [pointsId], references: [id])
+  id           String   @id @default(cuid())
+  name         String
+  isActive     Boolean  @default(true)
+  isDeleted    Boolean  @default(false)
+  comment      String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  pointsAmount Int      @default(0)
+  Points       Points[]
+  userId       String?
+  programId    String
+  User         User?    @relation(fields: [userId], references: [id])
+  Program      Program  @relation(fields: [programId], references: [id])
 }
 
 model Program {
@@ -47,19 +47,30 @@ model Program {
   startDate    DateTime?
   endDate      DateTime?
   created_at   DateTime      @default(now())
-  updated_at   DateTime
+  updated_at   DateTime      @updatedAt
   userCreate   String
   userUpdate   String?
-  UserPrograms UserProgram[]
+  UserProgram  UserProgram[]
 }
 
 model Points {
-  id              String        @id @default(cuid())
-  transactionType String
-  pointsAmount    Int           @default(0)
-  created_at      DateTime      @default(now())
-  updated_at      DateTime
+  id              String          @id @default(cuid())
+  transactionType transactionType
+  points          Int             @default(0)
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
   userCreate      String
   userUpdate      String?
-  UserProgram     UserProgram[]
+  userProgramId   String
+  UserProgram     UserProgram     @relation(fields: [userProgramId], references: [id])
+}
+
+enum transactionType {
+  EARN
+  LOSE
+}
+
+enum Role {
+  USER
+  ADMIN
 }

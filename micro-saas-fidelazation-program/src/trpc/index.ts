@@ -31,7 +31,7 @@ export const appRouter = router({
                     id: user.id,
                     name: user.given_name,
                     picture: user.picture,
-                    role: 'admin'
+                    role: 'ADMIN'
                 },
                 where: {
                     email: user.email
@@ -45,15 +45,16 @@ export const appRouter = router({
                     name: user.given_name,
                     email: user.email,
                     picture: user.picture,
-                    role: 'admin'
+                    role: 'ADMIN'
                 },
             })
         }
-        return { success: true }
+        return { success: true, user: dbUser }
     }),
 
     getUserPrograms: privateProcedure.query(async ({ ctx }) => {
         const { userId, user } = ctx
+
         const userPrograms = await db.userProgram.findMany({
             where: {
                 userId: userId
@@ -62,9 +63,7 @@ export const appRouter = router({
         return userPrograms
     }),
 
-    deleteUserProgram: privateProcedure.input(
-        z.object({ id: z.string() })
-    ).mutation(async ({ ctx, input }) => {
+    deleteUserProgram: privateProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
         const { userId } = ctx
 
         const userProgram = await db.userProgram.findFirst({
@@ -81,8 +80,49 @@ export const appRouter = router({
             }
         })
 
+        if (userProgram.programId) {
+            await db.program.delete({
+                where: {
+                    id: userProgram?.programId
+                }
+            })
+        }
+
         return userProgram
     }),
+
+    createUserProgram: privateProcedure.input(z.object({
+        name: z.string().min(2).max(50),
+        description: z.string().optional(),
+        programRules: z.string(),
+        startDate: z.string(),
+        endDate: z.string(),
+    })).mutation(async ({ ctx, input }) => {
+
+        const newProgram = await db.program.create({
+            data: {
+                name: input.name,
+                description: input.description,
+                programRules: input.programRules,
+                startDate: input.startDate,
+                endDate: input.endDate,
+                userCreate: ctx.userId,
+                updated_at: new Date(),
+            },
+        });
+
+        const newUserProgram = await db.userProgram.create({
+            data: {
+                name: newProgram.name,
+                userId: ctx.userId,
+                programId: newProgram.id,
+                updated_at: new Date(),
+                isActive: true,
+            },
+        });
+
+        return newUserProgram
+    })
 });
 
 export type AppRouter = typeof appRouter;
