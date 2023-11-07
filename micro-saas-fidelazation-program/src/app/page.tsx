@@ -117,7 +117,7 @@ export default function Home() {
                 Paso 2
               </span>
               <span className='text-xl font-semibold'>
-                Sube tu logo
+                Crea tu programa
               </span>
               <span className='mt-2 text-zinc-700'>
                 Crea una estrategia para fidelizar a tus clientes
@@ -145,7 +145,7 @@ export default function Home() {
           <div className='mt-16 flow-root sm:mt-24'>
             <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
               <Image
-                src='/Dashboard-Hero-1.webp'
+                src='/program-preview.jpg'
                 alt='uploading preview'
                 width={1419}
                 height={732}
