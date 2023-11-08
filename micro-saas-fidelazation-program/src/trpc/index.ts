@@ -115,6 +115,7 @@ export const appRouter = router({
             data: {
                 name: newProgram.name,
                 userId: ctx.userId,
+                // comment: newProgram.description,
                 programId: newProgram.id,
                 updated_at: new Date(),
                 isActive: true,

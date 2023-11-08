@@ -40,12 +40,12 @@ model UserProgram {
 model Program {
   id           String        @id @default(cuid())
   name         String
-  description  String?
+  description  String
   programRules String
   isActive     Boolean       @default(true)
   isDeleted    Boolean       @default(false)
-  startDate    DateTime?
-  endDate      DateTime?
+  startDate    DateTime
+  endDate      DateTime
   created_at   DateTime      @default(now())
   updated_at   DateTime      @updatedAt
   userCreate   String
