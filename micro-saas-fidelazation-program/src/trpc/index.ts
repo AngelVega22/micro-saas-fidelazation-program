@@ -93,8 +93,15 @@ export const appRouter = router({
 
     createUserProgram: privateProcedure.input(z.object({
         name: z.string().min(2).max(50),
-        description: z.string().optional(),
+        description: z.string(),
         programRules: z.string(),
+        pointValue: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+            message: "Escribe un número"
+        }),
+        reward: z.string(),
+        pointsGoal: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+            message: "Escribe un número"
+        }),
         startDate: z.string(),
         endDate: z.string(),
     })).mutation(async ({ ctx, input }) => {
@@ -116,6 +123,9 @@ export const appRouter = router({
                 name: newProgram.name,
                 userId: ctx.userId,
                 // comment: newProgram.description,
+                pointValue: parseInt(input.pointValue),
+                reward: input.reward,
+                pointsGoal: parseInt(input.pointsGoal),
                 programId: newProgram.id,
                 updated_at: new Date(),
                 isActive: true,

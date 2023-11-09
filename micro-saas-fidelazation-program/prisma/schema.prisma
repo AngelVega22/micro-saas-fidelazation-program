@@ -26,10 +26,13 @@ model UserProgram {
   name         String
   isActive     Boolean  @default(true)
   isDeleted    Boolean  @default(false)
-  comment      String?
+  comment      String?  @db.TinyText()
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
   pointsAmount Int      @default(0)
+  pointValue   Int
+  reward       String
+  pointsGoal   Int
   Points       Points[]
   userId       String?
   programId    String
@@ -40,8 +43,8 @@ model UserProgram {
 model Program {
   id           String        @id @default(cuid())
   name         String
-  description  String
-  programRules String
+  description  String        @db.TinyText()
+  programRules String        @db.TinyText()
   isActive     Boolean       @default(true)
   isDeleted    Boolean       @default(false)
   startDate    DateTime

@@ -30,9 +30,12 @@ import { cn } from "@/lib/utils"
 import { trpc } from "@/app/_trpc/client"
 
 const formSchema = z.object({
-    name: z.string().min(2).max(50),
-    description: z.string().optional(),
-    programRules: z.string().min(10),
+    name: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(50, { message: 'Debe tener máximo 50 letras' }),
+    description: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(255, { message: 'Debe tener máximo 255 letras' }),
+    programRules: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(255, { message: 'Debe tener máximo 255 letras' }),
+    pointValue: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), { message: "Escribe un número" }),
+    reward: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(50, { message: 'Debe tener máximo 50 letras' }),
+    pointsGoal: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), { message: "Escribe un número" }),
     startDate: z.date(),
     endDate: z.date(),
     // userCreate: z.string(),
@@ -61,6 +64,9 @@ const CreateButton = () => {
             name: "",
             description: "",
             programRules: "",
+            pointValue: "",
+            reward: "",
+            pointsGoal: "",
             startDate: undefined,
             endDate: undefined,
         },
@@ -74,7 +80,10 @@ const CreateButton = () => {
         const programData = {
             name: values.name,
             programRules: values.programRules,
-            description: values.description || '',
+            description: values.description,
+            pointValue: values.pointValue,
+            reward: values.reward,
+            pointsGoal: values.pointValue,
             startDate: startDate,
             endDate: endDate,
         };
@@ -96,7 +105,7 @@ const CreateButton = () => {
                 <Button>Crear Programa</Button>
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent className=" overflow-y-scroll max-h-screen">
                 <h4 className="mb-3 font-bold text-2xl text-gray-900">Registra tu programa</h4>
                 <hr />
                 <Form {...form}>
@@ -151,6 +160,57 @@ const CreateButton = () => {
                                     <FormMessage className="text-red-900" />
                                 </FormItem>
 
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="pointValue"
+                            render={({ field }) => (
+
+                                <FormItem>
+                                    <FormLabel className="text-gray-900">Valor de punto</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" placeholder="Valor de punto" {...field} />
+                                    </FormControl>
+                                    {/* <FormDescription>
+                                        Este es el nombre del programa que crearás
+                                    </FormDescription> */}
+                                    <FormMessage className="text-red-900" />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="reward"
+                            render={({ field }) => (
+
+                                <FormItem>
+                                    <FormLabel className="text-gray-900">Recompensa</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="Recompensa" {...field} />
+                                    </FormControl>
+                                    {/* <FormDescription>
+                                        Este es el nombre del programa que crearás
+                                    </FormDescription> */}
+                                    <FormMessage className="text-red-900" />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="pointsGoal"
+                            render={({ field }) => (
+
+                                <FormItem>
+                                    <FormLabel className="text-gray-900">Meta</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" placeholder="Meta" {...field} />
+                                    </FormControl>
+                                    {/* <FormDescription>
+                                        Este es el nombre del programa que crearás
+                                    </FormDescription> */}
+                                    <FormMessage className="text-red-900" />
+                                </FormItem>
                             )}
                         />
                         <FormField

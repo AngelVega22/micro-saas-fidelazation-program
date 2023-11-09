@@ -38,9 +38,12 @@ import { cn } from "@/lib/utils"
 import { trpc } from "@/app/_trpc/client"
 
 const formSchema = z.object({
-    name: z.string().min(2).max(50),
-    description: z.string().optional(),
-    programRules: z.string().min(10),
+    name: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(50, { message: 'Debe tener máximo 50 letras' }),
+    description: z.string().max(255, { message: 'Debe tener máximo 255 letras' }),
+    programRules: z.string().min(10).max(255, { message: 'Debe tener máximo 255 letras' }),
+    pointValue: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), { message: "Escribe un número" }),
+    reward: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(50, { message: 'Debe tener máximo 50 letras' }),
+    pointsGoal: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), { message: "Escribe un número" }),
     startDate: z.date(),
     endDate: z.date(),
     // userCreate: z.string(),
@@ -83,6 +86,9 @@ const EditCard = ({ program }: EditCardProps) => {
             name: program.name,
             description: program.description,
             programRules: program.programRules,
+            // pointValue: program,
+            // reward: program,
+            // pointsGoal: program,
             startDate: program.startDate,
             endDate: program.endDate,
         },
@@ -96,13 +102,15 @@ const EditCard = ({ program }: EditCardProps) => {
         const programData = {
             name: values.name,
             programRules: values.programRules,
-            description: values.description || '',
+            description: values.description,
+            pointValue: values.pointValue,
+            reward: values.reward,
+            pointsGoal: values.pointValue,
             startDate: startDate,
             endDate: endDate,
         };
         createUserProgram(programData);
     }
-
 
     return (
         <>
