@@ -83,7 +83,7 @@ const CreateButton = () => {
             description: values.description,
             pointValue: values.pointValue,
             reward: values.reward,
-            pointsGoal: values.pointValue,
+            pointsGoal: values.pointsGoal,
             startDate: startDate,
             endDate: endDate,
         };

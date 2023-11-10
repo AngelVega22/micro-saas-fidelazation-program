@@ -2,7 +2,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { privateProcedure, publicProcedure, router } from './trpc';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
-import { z } from 'zod';
+import { number, z } from 'zod';
 
 export const appRouter = router({
 
@@ -95,11 +95,11 @@ export const appRouter = router({
         name: z.string().min(2).max(50),
         description: z.string(),
         programRules: z.string(),
-        pointValue: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+        pointValue: z.string().refine((pointValue) => !Number.isNaN(parseInt(pointValue, 10)), {
             message: "Escribe un número"
         }),
         reward: z.string(),
-        pointsGoal: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+        pointsGoal: z.string().refine((pointsGoal) => !Number.isNaN(parseInt(pointsGoal, 10)), {
             message: "Escribe un número"
         }),
         startDate: z.string(),
@@ -132,6 +132,54 @@ export const appRouter = router({
             },
         });
 
+        return newUserProgram
+    }),
+
+    updateUserProgram: privateProcedure.input(z.object({
+        id: z.string(),
+        userProgramId: z.string(),
+        name: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(50, { message: 'Debe tener máximo 50 letras' }),
+        description: z.string().max(255, { message: 'Debe tener máximo 255 letras' }),
+        programRules: z.string().min(10).max(255, { message: 'Debe tener máximo 255 letras' }),
+        pointValue: z.string().refine((pointValue) => !Number.isNaN(parseInt(pointValue, 10)), { message: "Escribe un número" }),
+        reward: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(50, { message: 'Debe tener máximo 50 letras' }),
+        pointsGoal: z.string().refine((pointsGoal) => !Number.isNaN(parseInt(pointsGoal, 10)), { message: "Escribe un número" }),
+        startDate: z.string(),
+        endDate: z.string(),
+    })).mutation(async ({ ctx, input }) => {
+        // console.log(input)
+        const updateProgram = await db.program.update({
+            where: {
+                id: input.id
+            },
+            data: {
+                name: input.name,
+                description: input.description,
+                programRules: input.programRules,
+                startDate: input.startDate,
+                endDate: input.endDate,
+                userCreate: ctx.userId,
+                updated_at: new Date(),
+            },
+        });
+
+        const newUserProgram = await db.userProgram.update({
+            where: {
+                id: input.userProgramId
+            },
+            data: {
+                name: input.name,
+                userId: ctx.userId,
+                // comment: newProgram.description,
+                pointValue: parseInt(input.pointValue),
+                reward: input.reward,
+                pointsGoal: parseInt(input.pointsGoal),
+                programId: input.id,
+                updated_at: new Date(),
+                isActive: true,
+            },
+        });
+        // console.log(newUserProgram)
         return newUserProgram
     })
 });

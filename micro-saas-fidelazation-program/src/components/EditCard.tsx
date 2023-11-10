@@ -36,6 +36,9 @@ import {
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import { trpc } from "@/app/_trpc/client"
+import { Toaster } from "./ui/toaster"
+import { useToast } from "./ui/use-toast"
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
     name: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(50, { message: 'Debe tener máximo 50 letras' }),
@@ -63,19 +66,48 @@ interface Program {
     userCreate: string;
     userUpdate: string | null;
 }
+interface UserProgram {
+    id: string;
+    name: string;
+    isActive: boolean;
+    isDeleted: boolean;
+    comment?: string | null;
+    created_at: Date;
+    updated_at: Date;
+    pointsAmount: number;
+    pointValue: number;
+    reward: string;
+    pointsGoal: number;
+    userId?: string | null;
+    programId: string;
+}
 
 interface EditCardProps {
     program: Program;
+    userProgram: UserProgram
 }
-const EditCard = ({ program }: EditCardProps) => {
-
+const EditCard = ({ program, userProgram }: EditCardProps) => {
+    const { toast } = useToast()
+    const router = useRouter();
+    const time = new Date().toLocaleDateString('es-es', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })
     const [currentlyCreatingUserProgram, setCurrentlyCreatingUserProgram] = useState<string | null>(
         null
     )
 
-    const { mutate: createUserProgram, isSuccess } = trpc.createUserProgram.useMutation({
+    const { mutate: updateUserProgram, isSuccess } = trpc.updateUserProgram.useMutation({
         onSuccess: () => {
-            window.location.reload();
+
+            toast({
+                title: "Actualizado",
+                description: `Información actualizada el ${time} `,
+            })
+
+        },
+        onSettled: () => {
+            router.refresh();
+
+            // window.location.reload();
+
         }
     });
 
@@ -86,9 +118,9 @@ const EditCard = ({ program }: EditCardProps) => {
             name: program.name,
             description: program.description,
             programRules: program.programRules,
-            // pointValue: program,
-            // reward: program,
-            // pointsGoal: program,
+            pointValue: (userProgram.pointValue).toString(),
+            reward: userProgram.reward,
+            pointsGoal: (userProgram.pointsGoal).toString(),
             startDate: program.startDate,
             endDate: program.endDate,
         },
@@ -100,16 +132,18 @@ const EditCard = ({ program }: EditCardProps) => {
         const endDate = values.endDate ? values.endDate.toISOString() : '';
 
         const programData = {
+            id: program.id,
+            userProgramId: userProgram.id,
             name: values.name,
             programRules: values.programRules,
             description: values.description,
             pointValue: values.pointValue,
             reward: values.reward,
-            pointsGoal: values.pointValue,
+            pointsGoal: values.pointsGoal,
             startDate: startDate,
             endDate: endDate,
         };
-        createUserProgram(programData);
+        updateUserProgram(programData);
     }
 
     return (
@@ -118,6 +152,8 @@ const EditCard = ({ program }: EditCardProps) => {
                 <CardHeader>
                     <CardTitle className=" font-bold text-2xl text-gray-900">
                         Edita tu programa
+                        <Toaster />
+
                     </CardTitle>
                     <CardDescription>Puedes editar el programa aquí</CardDescription>
                 </CardHeader>
@@ -178,9 +214,62 @@ const EditCard = ({ program }: EditCardProps) => {
                             />
                             <FormField
                                 control={form.control}
+                                name="pointValue"
+                                render={({ field }) => (
+
+                                    <FormItem>
+                                        <FormLabel className="text-gray-900">Valor de punto</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" placeholder="Valor de punto" {...field} />
+                                        </FormControl>
+                                        {/* <FormDescription>
+                                        Este es el nombre del programa que crearás
+                                    </FormDescription> */}
+                                        <FormMessage className="text-red-900" />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="reward"
+                                render={({ field }) => (
+
+                                    <FormItem>
+                                        <FormLabel className="text-gray-900">Recompensa</FormLabel>
+                                        <FormControl>
+                                            <Input type="text" placeholder="Recompensa" {...field} />
+                                        </FormControl>
+                                        {/* <FormDescription>
+                                        Este es el nombre del programa que crearás
+                                    </FormDescription> */}
+                                        <FormMessage className="text-red-900" />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="pointsGoal"
+                                render={({ field }) => (
+
+                                    <FormItem>
+                                        <FormLabel className="text-gray-900">Meta</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" placeholder="Meta" {...field} />
+                                        </FormControl>
+                                        {/* <FormDescription>
+                                        Este es el nombre del programa que crearás
+                                    </FormDescription> */}
+                                        <FormMessage className="text-red-900" />
+                                    </FormItem>
+                                )}
+                            />
+
+
+                            <FormField
+                                control={form.control}
                                 name="startDate"
                                 render={({ field }) => (
-                                    <FormItem className="flex flex-col">
+                                    <FormItem className="flex flex-col ">
                                         <FormLabel>Fecha de inicio</FormLabel>
                                         <Popover>
                                             <PopoverTrigger asChild>

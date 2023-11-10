@@ -8,6 +8,7 @@ import Link from "next/link"
 import { Button } from "./ui/button"
 import { format } from "date-fns"
 import { useState } from 'react';
+import { Badge } from "./ui/badge"
 
 const Dashboard = () => {
     const [currentlyDeletingUserProgram, setCurrentlyDeletingUserProgram] = useState<string | null>(
@@ -30,15 +31,18 @@ const Dashboard = () => {
     return (
         <main className='mx-auto max-w-7xl md:p-10 '>
             <div className='mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0'>
-                <h1 className='mb-3 font-bold text-3xl text-gray-900'>
+                <h1 className='mb-3 font-bold text-3xl text-gray-900 pl-5'>
                     Programas
                 </h1>
-                <CreateButton />
+                <div className="pl-5">
+                    <CreateButton />
+
+                </div>
             </div>
-            <div >
+            <div className='px-5'>
                 <div>
                     {UserPrograms && UserPrograms?.length !== 0 ? (
-                        <ul className='mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3'>
+                        <ul className='mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-1'>
                             {UserPrograms
                                 .sort(
                                     (a, b) =>
@@ -64,18 +68,36 @@ const Dashboard = () => {
                                                 </div>
                                             </div>
                                         </Link>
-                                        <div className='px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500'>
-                                            <div className='flex items-center gap-2'>
-                                                <Minus className='h-4 w-4' />
+                                        <div className='px-6 mt-4 grid lg:grid-cols-6 grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500'>
+                                            <div className=" lg:block hidden items-center   gap-5 ">
+                                            </div>
+                                            <div className=" lg:block hidden items-center   gap-5 ">
+                                            </div>
+                                            <div className="   items-center   gap-2 ">
+
+                                                <strong>Creado:</strong>
+                                                <br />
                                                 {format(
                                                     new Date(UserProgram.created_at),
-                                                    'MMM yyyy'
+                                                    'dd MMM yyyy'
                                                 )}
                                             </div>
 
-                                            <div className='flex items-center gap-2'>
-                                                <MessageSquare className='h-4 w-4' />
-                                                {UserProgram.comment}
+                                            <div className='lg:block hidden  items-center   gap-5'>
+                                                <strong>Actualizado:</strong>
+                                                <br />
+                                                {format(
+                                                    new Date(UserProgram.created_at),
+                                                    'dd MMM yyyy'
+                                                )}
+                                            </div>
+
+                                            <div className='flex items-center gap-5'>
+                                                {UserProgram.isActive ? (
+                                                    <Badge variant="default">Activo</Badge>
+                                                ) : (
+                                                    <Badge variant="outline">Inactivo</Badge>
+                                                )}
                                             </div>
 
                                             <Button
@@ -89,6 +111,9 @@ const Dashboard = () => {
                                                     <Loader2 className="h-4 w-4 animate-spin" />
                                                 ) : (<Trash className='h-4 w-4' />)}
                                             </Button>
+
+
+
                                         </div>
                                     </li>
                                 ))}
