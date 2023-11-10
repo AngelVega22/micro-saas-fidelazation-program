@@ -58,7 +58,12 @@ const Dashboard = () => {
                                             className="flex flex-col gap-2"
                                         >
                                             <div className='pt-6 px-6 flex w-full items-center justify-between space-x-6'>
-                                                <div className='h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-orange-400 to-orange-700' />
+                                                {UserProgram.isActive ?
+                                                    (<div className='h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-orange-400 to-orange-700' />
+                                                    ) :
+                                                    (<div className='h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-gray-200 to-white-500' />
+                                                    )
+                                                }
                                                 <div className='flex-1 truncate'>
                                                     <div className='flex items-center space-x-3'>
                                                         <h3 className='truncate text-lg font-medium text-zinc-900'>

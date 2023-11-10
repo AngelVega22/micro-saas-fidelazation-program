@@ -146,6 +146,7 @@ export const appRouter = router({
         pointsGoal: z.string().refine((pointsGoal) => !Number.isNaN(parseInt(pointsGoal, 10)), { message: "Escribe un número" }),
         startDate: z.string(),
         endDate: z.string(),
+        isActive: z.boolean()
     })).mutation(async ({ ctx, input }) => {
         // console.log(input)
         const updateProgram = await db.program.update({
@@ -160,6 +161,7 @@ export const appRouter = router({
                 endDate: input.endDate,
                 userCreate: ctx.userId,
                 updated_at: new Date(),
+                isActive: input.isActive,
             },
         });
 
@@ -176,7 +178,7 @@ export const appRouter = router({
                 pointsGoal: parseInt(input.pointsGoal),
                 programId: input.id,
                 updated_at: new Date(),
-                isActive: true,
+                isActive: input.isActive,
             },
         });
         // console.log(newUserProgram)

@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/card"
 import EditCard from "@/components/EditCard"
 import Overview from "@/components/Overview"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { buttonVariants } from "@/components/ui/button"
 
 interface PageProps {
     params: {
@@ -52,13 +55,20 @@ const Page = async ({ params }: PageProps) => {
                     <div className='mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0'> */}
             <main className='mx-auto max-w-7xl md:p-10 '>
                 <div className='mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0'>
-                    <h1 className='mb-3 font-bold text-3xl text-gray-900 pl-6'>
+                    <h1 className='mb-3 font-bold text-3xl  flex sm:block text-gray-900  '>
+                        <Link className={buttonVariants({
+                            size: 'sm',
+                            className: 'mt-5',
+                            variant: 'ghost'
+                        })} href='/dashboard' >
+                            <ArrowLeft className='ml-2 h-5 w-5' />
+                        </Link>
                         {program.name}
                     </h1>
                 </div>
                 <div className='flex-1 justify-between flex flex-col'>
                     <div className='mx-auto w-full max-w-8xl grow flex-row-reverse lg:flex xl:px-0 '>
-                        <div className='flex-1 xl:flex lg:border-l lg:border-t-0 pl-5'>
+                        <div className='flex-1 xl:flex lg:border-l lg:border-t-0 px-3'>
                             <div className='px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-0'>
                                 <Overview userProgram={userProgram} />
 

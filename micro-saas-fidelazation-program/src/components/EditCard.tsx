@@ -39,6 +39,7 @@ import { trpc } from "@/app/_trpc/client"
 import { Toaster } from "./ui/toaster"
 import { useToast } from "./ui/use-toast"
 import { useRouter } from "next/navigation";
+import { Switch } from "./ui/switch"
 
 const formSchema = z.object({
     name: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(50, { message: 'Debe tener máximo 50 letras' }),
@@ -49,6 +50,7 @@ const formSchema = z.object({
     pointsGoal: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), { message: "Escribe un número" }),
     startDate: z.date(),
     endDate: z.date(),
+    isActive: z.boolean()
     // userCreate: z.string(),
 })
 
@@ -123,6 +125,7 @@ const EditCard = ({ program, userProgram }: EditCardProps) => {
             pointsGoal: (userProgram.pointsGoal).toString(),
             startDate: program.startDate,
             endDate: program.endDate,
+            isActive: userProgram.isActive
         },
     })
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -142,6 +145,7 @@ const EditCard = ({ program, userProgram }: EditCardProps) => {
             pointsGoal: values.pointsGoal,
             startDate: startDate,
             endDate: endDate,
+            isActive: values.isActive
         };
         updateUserProgram(programData);
     }
@@ -160,6 +164,29 @@ const EditCard = ({ program, userProgram }: EditCardProps) => {
                 <CardContent>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 ">
+                            <FormField
+                                control={form.control}
+                                name="isActive"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                        <div className="space-y-0.5">
+                                            {userProgram.isActive ?
+                                                (<FormLabel className="text-base">
+                                                    Desactivar
+                                                </FormLabel>) :
+                                                (<FormLabel className="text-base">
+                                                    Activar
+                                                </FormLabel>)}
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
                             <FormField
                                 control={form.control}
                                 name="name"
