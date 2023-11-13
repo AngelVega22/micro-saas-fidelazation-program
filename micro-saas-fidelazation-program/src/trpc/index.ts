@@ -31,7 +31,6 @@ export const appRouter = router({
                     id: user.id,
                     name: user.given_name,
                     picture: user.picture,
-                    role: 'ADMIN'
                 },
                 where: {
                     email: user.email
@@ -50,6 +49,170 @@ export const appRouter = router({
             })
         }
         return { success: true, user: dbUser }
+    }),
+
+    authClientCallback: publicProcedure.query(async () => {
+
+        const { getUser } = getKindeServerSession()
+        const user = getUser()
+
+        if (!user.id || !user.email)
+            throw new TRPCError({ code: 'UNAUTHORIZED' })
+
+        const dbUser = await db.user.findFirst({
+            where: {
+                id: user.id
+            }
+        })
+        console.log(dbUser)
+        const dbUserEmail = await db.user.findFirst({
+            where: {
+                email: user.email
+            }
+        })
+        if (!dbUser)
+            throw new TRPCError({ code: 'BAD_REQUEST' })
+        const updatedUserProgram = await db.userProgram.update({
+            data: {
+                userId: dbUser.id
+            },
+            where: {
+                id: dbUser.email,
+            }
+        })
+
+        if (dbUserEmail || dbUser) {
+            await db.user.update({
+                data: {
+                    id: user.id,
+                    name: user.given_name,
+                    picture: user.picture,
+                    role: 'USER'
+                },
+                where: {
+                    email: user.email
+                }
+            })
+        }
+        if (!dbUser) {
+            await db.user.create({
+                data: {
+                    id: user.id,
+                    name: user.given_name,
+                    email: user.email,
+                    picture: user.picture,
+                    role: 'USER'
+                },
+            })
+        }
+
+
+
+        console.log(updatedUserProgram)
+        return { success: true, user: dbUser, data: updatedUserProgram }
+    }),
+
+    createCustomer: publicProcedure.input(z.object({
+        email: z.string()
+            .min(1, { message: "This field has to be filled." })
+            .email("This is not a valid email."),
+        pointId: z.string()
+    })).mutation(async ({ input }) => {
+        const dbUser = await db.user.findFirst({
+            where: {
+                email: input.email
+            }
+        })
+
+        const points = await db.points.findFirst({
+            where: {
+                id: input.pointId
+            }
+        })
+        if (!dbUser) {
+            await db.user.create({
+                data: {
+                    id: input.email,
+                    email: input.email,
+                    role: 'USER'
+                },
+            })
+        }
+
+        const userProgram = await db.userProgram.findFirst({
+            where: {
+                id: points?.userProgramId
+            }
+        })
+
+        if (!userProgram)
+            throw new TRPCError({ code: 'BAD_REQUEST' })
+
+        if (!dbUser) {
+            await db.userProgram.create({
+                data: {
+                    name: userProgram.name,
+                    userId: input.email,
+                    pointValue: userProgram.pointValue,
+                    reward: userProgram.reward,
+                    pointsGoal: userProgram.pointsGoal,
+                    programId: userProgram.programId,
+                    pointsAmount: userProgram.pointValue,
+                    updated_at: new Date(),
+                    isActive: true,
+                }
+            })
+            await db.points.update({
+                data: {
+                    isUsed: true
+                },
+                where: {
+                    id: input.pointId
+                }
+            })
+        }
+        if (!dbUser?.id) throw new TRPCError({ code: 'BAD_REQUEST' })
+
+        const existUserProgram = await db.userProgram.findFirst({
+            where: {
+                userId: dbUser.id
+            }
+        })
+        if (dbUser?.id && !existUserProgram)
+            await db.userProgram.create({
+                data: {
+                    name: userProgram.name,
+                    userId: dbUser?.id,
+                    pointValue: userProgram.pointValue,
+                    reward: userProgram.reward,
+                    pointsGoal: userProgram.pointsGoal,
+                    programId: userProgram.programId,
+                    pointsAmount: userProgram.pointValue,
+                    updated_at: new Date(),
+                    isActive: true,
+                }
+            })
+        if (existUserProgram) {
+            await db.userProgram.update({
+                data: {
+                    pointsAmount: existUserProgram?.pointsAmount + userProgram.pointValue,
+                    updated_at: new Date(),
+                },
+                where: {
+                    id: existUserProgram?.id
+                }
+            })
+        }
+        const updatedPoint = await db.points.update({
+            data: {
+                isUsed: true
+            },
+            where: {
+                id: input.pointId
+            }
+        })
+
+        return { updatedPoint }
     }),
 
     getUserPrograms: privateProcedure.query(async ({ ctx }) => {
@@ -181,8 +344,35 @@ export const appRouter = router({
                 isActive: input.isActive,
             },
         });
+
+        await db.userProgram.updateMany({
+            data: {
+                isActive: input.isActive,
+            },
+            where: {
+                programId: updateProgram.id
+            }
+        })
         // console.log(newUserProgram)
         return newUserProgram
+    }),
+
+    createUserProgramPoint: privateProcedure.input(
+        z.object({
+            points: z.number(),
+            userProgramId: z.string()
+        })
+    ).mutation(async ({ ctx, input }) => {
+        const newUserProgramPoint = await db.points.create({
+            data: {
+                transactionType: 'EARN',
+                points: input.points,
+                userCreate: ctx.userId,
+                userProgramId: input.userProgramId
+            },
+        });
+        // console.log(newUserProgramPoint)
+        return newUserProgramPoint
     })
 });
 

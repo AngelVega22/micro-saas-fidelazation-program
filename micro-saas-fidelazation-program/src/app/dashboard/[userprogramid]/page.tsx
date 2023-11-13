@@ -12,8 +12,9 @@ import {
 import EditCard from "@/components/EditCard"
 import Overview from "@/components/Overview"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, QrCode } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
+import EnrollButton from "@/components/EnrollButton"
 
 interface PageProps {
     params: {
@@ -53,7 +54,7 @@ const Page = async ({ params }: PageProps) => {
         <>
             {/* <main className='mx-auto max-w-7xl md:p-10 space-y-5  h-[calc(100vh-3.5rem)]'>
                     <div className='mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0'> */}
-            <main className='mx-auto max-w-7xl md:p-10 '>
+            <main className='mx-auto max-w-7xl md:px-5 '>
                 <div className='mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0'>
                     <h1 className='mb-3 font-bold text-3xl  flex sm:block text-gray-900  '>
                         <Link className={buttonVariants({
@@ -65,7 +66,12 @@ const Page = async ({ params }: PageProps) => {
                         </Link>
                         {program.name}
                     </h1>
+
                 </div>
+                <div className="mx-auto max-w-7xl  px-5 ">
+                    <EnrollButton userProgram={userProgram} />
+                </div>
+
                 <div className='flex-1 justify-between flex flex-col'>
                     <div className='mx-auto w-full max-w-8xl grow flex-row-reverse lg:flex xl:px-0 '>
                         <div className='flex-1 xl:flex lg:border-l lg:border-t-0 px-3'>

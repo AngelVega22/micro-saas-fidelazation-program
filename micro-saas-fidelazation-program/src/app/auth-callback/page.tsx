@@ -9,7 +9,21 @@ const Page = () => {
 
     const searchParams = useSearchParams()
     const origin = searchParams.get('origin')
+    console.log(origin)
 
+    if (origin === 'point-registation') {
+        const { isError, isSuccess } =
+            trpc.authClientCallback.useQuery(undefined, {
+                retry: true,
+                retryDelay: 500
+            })
+        if (isSuccess) {
+            router.push(origin ? `/${origin}` : '/dashboard')
+        }
+        if (!isError) {
+            router.push('/api/auth/login')
+        }
+    }
 
     const { isError, isSuccess } =
         trpc.authCallback.useQuery(undefined, {
@@ -28,9 +42,9 @@ const Page = () => {
             <div className='flex flex-col items-center gap-2'>
                 <Loader2 className='h-8 w-8 animate-spin text-zinc-800' />
                 <h3 className='font-semibold text-xl'>
-                    Setting up your account...
+                    Configurando tu cuenta...
                 </h3>
-                <p>You will be redirected automatically.</p>
+                <p>Serás redirigido automáticamente.</p>
             </div>
         </div>
     )
