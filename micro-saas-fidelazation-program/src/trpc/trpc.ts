@@ -1,5 +1,6 @@
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { TRPCError, initTRPC } from '@trpc/server';
+import { db } from '../db/index';
 
 const t = initTRPC.create();
 
@@ -11,10 +12,15 @@ const isAuth = middleware(async (opts) => {
     if (!user || !user.id) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
-
+    const dbUser = await db.user.findFirst({
+        where: {
+            id: user.id
+        }
+    })
     return opts.next({
         ctx: {
             userId: user.id,
+            role: dbUser?.role,
             user
         }
     })

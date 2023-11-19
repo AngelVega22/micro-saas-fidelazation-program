@@ -19,7 +19,7 @@ const Page = async ({ params }: PageProps) => {
     const user = getUser()
     const point = await db.points.findFirst({
         where: {
-            id: pointsid
+            id: pointsid,
         }
     })
     let userId: string = ''
@@ -44,7 +44,9 @@ const Page = async ({ params }: PageProps) => {
 
         {user ? (
             <div>
-                {user && userRole === 'ADMIN' ? (
+                {/* {user.id == point?.userCreate ? (
+                    <div> */}
+                {user && userRole === 'ADMIN' && user.id == point?.userCreate ? (
                     <div>
                         {isUsed ? (
                             <MaxWidthWrapper >
@@ -73,11 +75,42 @@ const Page = async ({ params }: PageProps) => {
                                 </Alert>
                             </MaxWidthWrapper  >
                         ) : (
-                            <RegisterForm pointId={pointId} />
+                            <div>
+                                {
+                                    user.id !== point?.userCreate && userRole === 'ADMIN' ? (
+                                        <MaxWidthWrapper >
+                                            <Alert className=" mt-10">
+                                                <XCircle className="h-4 w-4" />
+                                                <AlertTitle>Error</AlertTitle>
+                                                <AlertDescription>
+                                                    ¡Este perfil es de un negocio!
+                                                </AlertDescription>
+                                            </Alert>
+                                        </MaxWidthWrapper  >
+                                    ) : (
+                                        <div>
+                                            <RegisterForm pointId={pointId} point={point?.points} email={user.email} />
+                                        </div>
+                                    )
+                                }
+                            </div>
                         )}
                     </div  >
                 )}
             </div>
+            //     ) : (
+            //         <MaxWidthWrapper >
+            //             <Alert className=" mt-10">
+            //                 <XCircle className="h-4 w-4" />
+            //                 <AlertTitle>Error</AlertTitle>
+            //                 <AlertDescription>
+            //                     ¡Este perfil es de un negocio!
+            //                 </AlertDescription>
+            //             </Alert>
+            //         </MaxWidthWrapper  >
+            //     )}
+            // </div>
+
         ) : (
             <div>
                 {isUsed ? (
@@ -91,7 +124,7 @@ const Page = async ({ params }: PageProps) => {
                         </Alert>
                     </MaxWidthWrapper  >
                 ) : (
-                    <RegisterForm pointId={pointId} />
+                    <RegisterForm pointId={pointId} point={point?.points} email={user} />
                 )}
             </div>
         )}

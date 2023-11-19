@@ -33,13 +33,13 @@ const Navbar = () => {
                               variant: 'ghost',
                               size: 'sm',
                            })}>
-                           Sign in
+                           Ingresar
                         </LoginLink>
                         <RegisterLink
                            className={buttonVariants({
                               size: 'sm',
                            })}>
-                           Get started{' '}
+                           Registrate{' '}
                            <ArrowRight className='ml-1.5 h-5 w-5' />
                         </RegisterLink>
                      </>
@@ -51,7 +51,7 @@ const Navbar = () => {
                               variant: 'ghost',
                               size: 'sm',
                            })}>
-                           Dashboard
+                           Programas
                         </Link>
                         <LogoutLink
                            className={buttonVariants({

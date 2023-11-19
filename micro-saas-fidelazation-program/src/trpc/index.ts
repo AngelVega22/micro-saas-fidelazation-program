@@ -123,6 +123,8 @@ export const appRouter = router({
                 email: input.email
             }
         })
+        if (dbUser?.role === 'ADMIN')
+            throw new TRPCError({ code: 'BAD_REQUEST' })
 
         const points = await db.points.findFirst({
             where: {
@@ -175,7 +177,8 @@ export const appRouter = router({
 
         const existUserProgram = await db.userProgram.findFirst({
             where: {
-                userId: dbUser.id
+                userId: dbUser.id,
+                programId: userProgram.programId
             }
         })
         if (dbUser?.id && !existUserProgram)
@@ -193,6 +196,7 @@ export const appRouter = router({
                 }
             })
         if (existUserProgram) {
+
             await db.userProgram.update({
                 data: {
                     pointsAmount: existUserProgram?.pointsAmount + userProgram.pointValue,
@@ -237,19 +241,36 @@ export const appRouter = router({
         })
         if (!userProgram) throw new TRPCError({ code: 'NOT_FOUND' })
 
-        await db.userProgram.delete({
-            where: {
-                id: input.id
-            }
-        })
-
         if (userProgram.programId) {
-            await db.program.delete({
+
+            await db.userProgram.updateMany({
+                data: {
+                    isActive: false,
+                    isDeleted: true
+                },
+                where: {
+                    programId: userProgram?.programId
+                }
+            })
+            await db.program.update({
+                data: {
+                    isActive: false,
+                    isDeleted: true
+                },
                 where: {
                     id: userProgram?.programId
                 }
             })
+
         }
+        await db.userProgram.update({
+            data: {
+                isActive: false,
+            },
+            where: {
+                id: input.id
+            }
+        })
 
         return userProgram
     }),
@@ -268,6 +289,8 @@ export const appRouter = router({
         startDate: z.string(),
         endDate: z.string(),
     })).mutation(async ({ ctx, input }) => {
+
+        if (ctx.role !== 'ADMIN') throw new TRPCError({ code: 'UNAUTHORIZED' })
 
         const newProgram = await db.program.create({
             data: {
@@ -312,6 +335,8 @@ export const appRouter = router({
         isActive: z.boolean()
     })).mutation(async ({ ctx, input }) => {
         // console.log(input)
+        if (ctx.role !== 'ADMIN') throw new TRPCError({ code: 'UNAUTHORIZED' })
+
         const updateProgram = await db.program.update({
             where: {
                 id: input.id
@@ -347,7 +372,13 @@ export const appRouter = router({
 
         await db.userProgram.updateMany({
             data: {
+                name: input.name,
                 isActive: input.isActive,
+                pointValue: parseInt(input.pointValue),
+                reward: input.reward,
+                pointsGoal: parseInt(input.pointsGoal),
+                programId: input.id,
+                updated_at: new Date(),
             },
             where: {
                 programId: updateProgram.id
