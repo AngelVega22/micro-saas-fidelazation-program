@@ -5,6 +5,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal, XCircle } from "lucide-react"
 import MaxWidthWrapper from "@/components/maxWidthWrapper"
+import ImageQR from "@/components/ImageQR"
 
 interface PageProps {
     params: {
@@ -44,8 +45,7 @@ const Page = async ({ params }: PageProps) => {
 
         {user ? (
             <div>
-                {/* {user.id == point?.userCreate ? (
-                    <div> */}
+
                 {user && userRole === 'ADMIN' && user.id == point?.userCreate ? (
                     <div>
                         {isUsed ? (
@@ -59,7 +59,10 @@ const Page = async ({ params }: PageProps) => {
                                 </Alert>
                             </MaxWidthWrapper  >
                         ) : (
-                            <h1>`http://localhost:3000/product/${params.pointsid}` QR</h1>
+                            <>
+                                <ImageQR url={pointsid} />
+                            </>
+
                         )}
                     </div>
                 ) : (
@@ -98,18 +101,7 @@ const Page = async ({ params }: PageProps) => {
                     </div  >
                 )}
             </div>
-            //     ) : (
-            //         <MaxWidthWrapper >
-            //             <Alert className=" mt-10">
-            //                 <XCircle className="h-4 w-4" />
-            //                 <AlertTitle>Error</AlertTitle>
-            //                 <AlertDescription>
-            //                     ¡Este perfil es de un negocio!
-            //                 </AlertDescription>
-            //             </Alert>
-            //         </MaxWidthWrapper  >
-            //     )}
-            // </div>
+
 
         ) : (
             <div>
