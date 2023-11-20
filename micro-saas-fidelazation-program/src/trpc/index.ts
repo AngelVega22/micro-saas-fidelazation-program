@@ -64,7 +64,7 @@ export const appRouter = router({
                 id: user.id
             }
         })
-        console.log(dbUser)
+        // console.log(dbUser)
         const dbUserEmail = await db.user.findFirst({
             where: {
                 email: user.email
@@ -108,7 +108,7 @@ export const appRouter = router({
 
 
 
-        console.log(updatedUserProgram)
+        // console.log(updatedUserProgram)
         return { success: true, user: dbUser, data: updatedUserProgram }
     }),
 

@@ -58,7 +58,6 @@ const RegisterForm = ({ pointId, email, point }: RegisterFormProps) => {
     })
     function onSubmit(values: z.infer<typeof formSchema>) {
 
-        console.log(values)
         const customerEmail = {
             email: values.email,
             pointId: pointId

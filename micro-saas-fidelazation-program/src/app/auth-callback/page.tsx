@@ -9,7 +9,7 @@ const Page = () => {
 
     const searchParams = useSearchParams()
     const origin = searchParams.get('origin')
-    console.log(origin)
+    // console.log(origin)
 
     if (origin === 'point-registation') {
         const { isError, isSuccess } =

@@ -1,11 +1,15 @@
 'use client'
 
 interface imageQRprops {
-    url: string
+    url: string,
+    description: string
 }
-const ImageQR = (url: imageQRprops) => {
-    const myURL = 'http://localhost:3000/product/'
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${myURL + url.url}`
+const ImageQR = ({ url, description }: imageQRprops) => {
+
+
+
+    const myURL = 'http://localhost:3000/'
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${myURL + url}`
 
     return (
         <>
@@ -15,7 +19,7 @@ const ImageQR = (url: imageQRprops) => {
                     <div className="text-center">
                         <h1 className="text-3xl font-bold mb-4 text-center text-orange-600">¡Felicidades!</h1>
                         <p className="text-gray-700 mb-6">
-                            Has ganado puntos. Escanea el siguiente código QR para reclamar tus recompensas.
+                            {description}
                         </p>
                     </div>
                     <img
@@ -24,7 +28,7 @@ const ImageQR = (url: imageQRprops) => {
                         className="mx-auto max-w-full h-auto mb-6"
                     />
                     <p className="text-gray-600 text-center text-sm">
-                        Recuerda reclamar tus puntos antes de la fecha de vencimiento.
+                        Recuerda reclamar antes de la fecha de vencimiento.
                     </p>
                 </div>
             </div>

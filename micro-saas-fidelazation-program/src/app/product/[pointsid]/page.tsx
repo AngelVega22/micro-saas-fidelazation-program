@@ -42,11 +42,69 @@ const Page = async ({ params }: PageProps) => {
     if (point !== null) pointId = point.id;
 
     return (<>
+        {point ? (
+            <section>
+                {user ? (
+                    <div>
 
-        {user ? (
-            <div>
+                        {user && userRole === 'ADMIN' && user.id == point?.userCreate ? (
+                            <div>
+                                {isUsed ? (
+                                    <MaxWidthWrapper >
+                                        <Alert className=" mt-10">
+                                            <XCircle className="h-4 w-4" />
+                                            <AlertTitle>Error</AlertTitle>
+                                            <AlertDescription>
+                                                ¡Este punto ya fue utilizado!
+                                            </AlertDescription>
+                                        </Alert>
+                                    </MaxWidthWrapper  >
+                                ) : (
+                                    <>
+                                        <ImageQR url={`product/${pointsid}`} description="Escanea el siguiente código QR para reclamar tus puntos." />
+                                    </>
 
-                {user && userRole === 'ADMIN' && user.id == point?.userCreate ? (
+                                )}
+                            </div>
+                        ) : (
+                            <div >
+                                {isUsed ? (
+                                    <MaxWidthWrapper >
+                                        <Alert className=" mt-10">
+                                            <XCircle className="h-4 w-4" />
+                                            <AlertTitle>Error</AlertTitle>
+                                            <AlertDescription>
+                                                ¡Este punto ya fue utilizado!
+                                            </AlertDescription>
+                                        </Alert>
+                                    </MaxWidthWrapper  >
+                                ) : (
+                                    <div>
+                                        {
+                                            user.id !== point?.userCreate && userRole === 'ADMIN' ? (
+                                                <MaxWidthWrapper >
+                                                    <Alert className=" mt-10">
+                                                        <XCircle className="h-4 w-4" />
+                                                        <AlertTitle>Error</AlertTitle>
+                                                        <AlertDescription>
+                                                            ¡Este perfil es de un negocio!
+                                                        </AlertDescription>
+                                                    </Alert>
+                                                </MaxWidthWrapper  >
+                                            ) : (
+                                                <div>
+                                                    <RegisterForm pointId={pointId} point={point?.points} email={user.email} />
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                )}
+                            </div  >
+                        )}
+                    </div>
+
+
+                ) : (
                     <div>
                         {isUsed ? (
                             <MaxWidthWrapper >
@@ -59,66 +117,21 @@ const Page = async ({ params }: PageProps) => {
                                 </Alert>
                             </MaxWidthWrapper  >
                         ) : (
-                            <>
-                                <ImageQR url={pointsid} />
-                            </>
-
+                            <RegisterForm pointId={pointId} point={point?.points} email={user} />
                         )}
                     </div>
-                ) : (
-                    <div >
-                        {isUsed ? (
-                            <MaxWidthWrapper >
-                                <Alert className=" mt-10">
-                                    <XCircle className="h-4 w-4" />
-                                    <AlertTitle>Error</AlertTitle>
-                                    <AlertDescription>
-                                        ¡Este punto ya fue utilizado!
-                                    </AlertDescription>
-                                </Alert>
-                            </MaxWidthWrapper  >
-                        ) : (
-                            <div>
-                                {
-                                    user.id !== point?.userCreate && userRole === 'ADMIN' ? (
-                                        <MaxWidthWrapper >
-                                            <Alert className=" mt-10">
-                                                <XCircle className="h-4 w-4" />
-                                                <AlertTitle>Error</AlertTitle>
-                                                <AlertDescription>
-                                                    ¡Este perfil es de un negocio!
-                                                </AlertDescription>
-                                            </Alert>
-                                        </MaxWidthWrapper  >
-                                    ) : (
-                                        <div>
-                                            <RegisterForm pointId={pointId} point={point?.points} email={user.email} />
-                                        </div>
-                                    )
-                                }
-                            </div>
-                        )}
-                    </div  >
                 )}
-            </div>
-
-
+            </section>
         ) : (
-            <div>
-                {isUsed ? (
-                    <MaxWidthWrapper >
-                        <Alert className=" mt-10">
-                            <XCircle className="h-4 w-4" />
-                            <AlertTitle>Error</AlertTitle>
-                            <AlertDescription>
-                                ¡Este punto ya fue utilizado!
-                            </AlertDescription>
-                        </Alert>
-                    </MaxWidthWrapper  >
-                ) : (
-                    <RegisterForm pointId={pointId} point={point?.points} email={user} />
-                )}
-            </div>
+            <MaxWidthWrapper >
+                <Alert className=" mt-10"  >
+                    <XCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>
+                        ¡Este punto no existe!
+                    </AlertDescription>
+                </Alert>
+            </MaxWidthWrapper  >
         )}
     </>
     )
