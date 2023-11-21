@@ -5,6 +5,7 @@ import ImageQR from '@/components/ImageQR';
 import MaxWidthWrapper from "@/components/maxWidthWrapper";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { XCircle } from "lucide-react";
+import { TRPCError } from "@trpc/server";
 
 
 interface PageProps {
@@ -39,9 +40,21 @@ const Page = async ({ params }: PageProps) => {
         }
     })
 
-    if (dbUser.id === program?.userCreate)
-        redirect(`/transaction?userProgramId=${userProgramId}`)
+    if (!userProgram)
+        throw new TRPCError({ code: 'BAD_REQUEST' })
 
+    if (dbUser.id === program?.userCreate) {
+        const newUserProgramPoint = await db.points.create({
+            data: {
+                transactionType: 'LOSE',
+                points: userProgram.pointsAmount,
+                userCreate: user.id,
+                userProgramId: userProgram.id
+            }
+        });
+        redirect(`/transaction?transaction=${newUserProgramPoint.id}`)
+    }
+    //TO DO UPDATE STATE WHEN POINT IS USED
 
     return (<>
         {dbUser.role === 'USER' && userProgram?.userId === dbUser.id ? (
