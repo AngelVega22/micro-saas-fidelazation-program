@@ -1,6 +1,6 @@
 "use client"
 
-import { QrCode } from "lucide-react"
+import { QrCode, Trophy } from "lucide-react"
 import Link from "next/link"
 import { Button, buttonVariants } from "./ui/button"
 import { trpc } from "@/app/_trpc/client";
@@ -13,8 +13,8 @@ interface UserProgram {
     isActive: boolean;
     isDeleted: boolean;
     comment?: string | null;
-    created_at: Date;
-    updated_at: Date;
+    created_at: string;
+    updated_at: string;
     pointsAmount: number;
     pointValue: number;
     reward: string;
@@ -23,10 +23,10 @@ interface UserProgram {
     programId: string;
 }
 
-interface EnrollButtonProps {
+interface RedeemButtonProps {
     userProgram: UserProgram
 }
-const EnrollButton = ({ userProgram }: EnrollButtonProps) => {
+const RedeemButton = ({ userProgram }: RedeemButtonProps) => {
     const router = useRouter();
     const [pointsId, setPointsId] = useState<string | null>(null);
 
@@ -34,15 +34,15 @@ const EnrollButton = ({ userProgram }: EnrollButtonProps) => {
         onSuccess: (Points) => {
             const newPointsId: string = Points.id;
             setPointsId(newPointsId);
-            router.push(`/product/${Points.id}`)
+            router.push(`/transaction/${Points.id}`)
         }
     });
 
     const handleClick = () => {
         const transactionData = {
-            points: userProgram.pointValue,
+            points: userProgram.pointsGoal,
             userProgramId: userProgram.id,
-            transactionType: 'EARN' as const
+            transactionType: 'LOSE' as const
         };
         createUserProgramPoint(transactionData);
     };
@@ -51,15 +51,16 @@ const EnrollButton = ({ userProgram }: EnrollButtonProps) => {
             <Button
                 onClick={handleClick}
                 className={buttonVariants({
-                    className: 'mt-5 w-full ',
+                    size: 'sm',
+                    className: 'text-sm w-full gap-2',
                     variant: "default"
                 })}
             >
-                <QrCode />
+                Reclamar premio <Trophy />
             </Button>
 
         </>
     )
 }
 
-export default EnrollButton
+export default RedeemButton

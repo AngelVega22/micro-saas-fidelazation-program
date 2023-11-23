@@ -1,5 +1,9 @@
 'use client'
 
+import { ArrowLeftCircle } from "lucide-react"
+import { buttonVariants } from "./ui/button"
+import Link from "next/link"
+
 interface imageQRprops {
     url: string,
     description: string
@@ -31,6 +35,20 @@ const ImageQR = ({ url, description }: imageQRprops) => {
                         Recuerda reclamar antes de la fecha de vencimiento.
                     </p>
                 </div>
+
+            </div>
+            <div className="  flex items-center justify-center  ">
+                <Link
+                    className={buttonVariants({
+                        size: 'lg',
+                        className: 'mt-5 w-80 border rounded-3xl gap-2  ',
+                        variant: 'ghost'
+                    })}
+                    href='/dashboard'
+                >
+                    <ArrowLeftCircle className='ml-2 h-5 w-5' />
+                    Volver
+                </Link>
             </div>
         </>
     )

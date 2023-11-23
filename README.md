@@ -65,7 +65,10 @@ Here are some tasks that need to be completed or considered for the Loyalty Prog
 - [ ] Conduct user testing to improve the user experience.
 - [ ] Document the API endpoints for external developers.
 - [ ] Implement a dashboard for business owners to track program performance.
-- [ ] Improve security by adding user authentication and authorization.
+- [x] Improve security by adding user authentication and authorization.
 - [ ] Enhance the program's data analytics and reporting capabilities.
-
- 
+- [ ] Add more business logic.
+- [ ] CRON JOB to delete no active transaction points.
+- [ ] Add Pricing page.
+- [ ] Integrate digital payments.
+- [ ] Add types of rules in the registation form and improve it.

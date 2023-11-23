@@ -389,14 +389,16 @@ export const appRouter = router({
     }),
 
     createUserProgramPoint: privateProcedure.input(
+
         z.object({
             points: z.number(),
-            userProgramId: z.string()
+            userProgramId: z.string(),
+            transactionType: z.enum(["EARN", "LOSE"])
         })
     ).mutation(async ({ ctx, input }) => {
         const newUserProgramPoint = await db.points.create({
             data: {
-                transactionType: 'EARN',
+                transactionType: input.transactionType,
                 points: input.points,
                 userCreate: ctx.userId,
                 userProgramId: input.userProgramId

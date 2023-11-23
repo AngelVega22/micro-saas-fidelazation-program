@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { db } from "@/db";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { TRPCError } from '@trpc/server';
+import TransactionResponseView from '../../components/TransactionResponseView';
 
 
 const Page = async (ctx: Params) => {
@@ -28,49 +29,11 @@ const Page = async (ctx: Params) => {
             id: pointId
         }
     })
-    if (point?.isUsed === true)
-        redirect('/')
+    console.log(point)
 
-    const userProgram = await db.userProgram.findFirst({
-        where: {
-            id: point?.userProgramId
-        }
-    })
-    const program = await db.program.findFirst({
-        where: {
-            id: userProgram?.programId
-        }
-    })
-
-    if (dbUser.id !== program?.userCreate)
-        redirect('/')
-
-    console.log('user', userProgram)
-
-    if (!userProgram)
-        throw new TRPCError({ code: 'BAD_REQUEST' })
-
-    const transaction = await db.userProgram.update({
-        data: {
-            pointsAmount: userProgram?.pointsAmount - userProgram?.pointsGoal
-        },
-        where: {
-            id: userProgram.id
-        }
-    })
-
-    if (transaction)
-        await db.points.update({
-            data: {
-                isUsed: true
-            },
-            where: {
-                id: pointId
-            }
-        })
-
-    // TO DO - SUCCESS PAGE
-    redirect('/')
+    return (<>
+        <TransactionResponseView point={point?.points} />
+    </>)
 }
 
 export default Page

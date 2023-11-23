@@ -5,6 +5,7 @@ import { Badge } from "./ui/badge"
 import { format } from "date-fns"
 import Link from "next/link";
 import { buttonVariants } from '@/components/ui/button';
+import RedeemButton from "./RedeemButton";
 
 interface UserProgram {
     id: string;
@@ -39,7 +40,6 @@ const CardList = ({ UserPrograms, filterValue }: CardListProps) => {
             return userProgram;
         }
     });
-
     return (<>
 
         <ul className='mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3 '>
@@ -48,8 +48,8 @@ const CardList = ({ UserPrograms, filterValue }: CardListProps) => {
                     (a, b) =>
                         new Date(b.created_at).getTime() -
                         new Date(a.created_at).getTime()
-                ).map((UserProgram) => (
-                    <li key={UserProgram.id}
+                ).map((userProgram) => (
+                    <li key={userProgram.id}
                         className='col-span-1 border divide-y divide-gray-200 rounded-lg bg-white shadow-sm transition hover:shadow-lg'
                     >
 
@@ -61,26 +61,26 @@ const CardList = ({ UserPrograms, filterValue }: CardListProps) => {
 
                                         </div>
                                         <div className="flex flex-col md:flex-row items-center   md:items-start">
-                                            {UserProgram.isActive ?
+                                            {userProgram.isActive ?
                                                 (<div className='h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-orange-400 to-orange-700' />
                                                 ) :
                                                 (<div className='h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-gray-200 to-white-500' />
                                                 )
                                             }
                                             <div className="pl-5 flex flex-col items-start">
-                                                <h3 className="text-xl font-semibold">{UserProgram.name}</h3>
+                                                <h3 className="text-xl font-semibold">{userProgram.name}</h3>
                                                 <span className="text-sm tracking-tight text-gray-900 mb-2">
-                                                    Premio: {UserProgram.reward}
+                                                    Premio: {userProgram.reward}
                                                 </span>
                                                 <span className="text-sm tracking-tight text-gray-500">
-                                                    Registrado:  {format(new Date(UserProgram.created_at), 'dd MMM yyyy')}
+                                                    Registrado:  {format(new Date(userProgram.created_at), 'dd MMM yyyy')}
                                                 </span>
 
                                                 <div className="flex flex-wrap gap-10 justify-between mt-1">
                                                     <div className="text-sm mt-1">
-                                                        {UserProgram.isActive && !UserProgram.isDeleted ? (
+                                                        {userProgram.isActive && !userProgram.isDeleted ? (
                                                             <Badge variant="default">Activo</Badge>
-                                                        ) : UserProgram.isDeleted ? (
+                                                        ) : userProgram.isDeleted ? (
                                                             <Badge variant="outline">Eliminado</Badge>
                                                         ) : (
                                                             <Badge variant="outline">Inactivo</Badge>
@@ -99,7 +99,7 @@ const CardList = ({ UserPrograms, filterValue }: CardListProps) => {
                                                     <Coins />
                                                 </div>
                                                 <div className="flex flex-col items-start">
-                                                    <h4 className="text-xl md:text-2xl xl:text-3xl font-bold">{UserProgram.pointsAmount}</h4>
+                                                    <h4 className="text-xl md:text-2xl xl:text-3xl font-bold">{userProgram.pointsAmount}</h4>
                                                     <span className="text-xs md:text-sm tracking-tight text-gray-500"><span className="hidden sm:inline">Puntos</span> </span>
                                                 </div>
                                             </div>
@@ -110,7 +110,7 @@ const CardList = ({ UserPrograms, filterValue }: CardListProps) => {
                                                     <Goal />
                                                 </div>
                                                 <div className="flex flex-col items-start">
-                                                    <h4 className="text-xl md:text-2xl xl:text-3xl font-bold">{UserProgram.pointsGoal}</h4>
+                                                    <h4 className="text-xl md:text-2xl xl:text-3xl font-bold">{userProgram.pointsGoal}</h4>
                                                     <span className="text-xs md:text-sm tracking-tight text-gray-500"> Meta</span>
                                                 </div>
                                             </div>
@@ -119,17 +119,21 @@ const CardList = ({ UserPrograms, filterValue }: CardListProps) => {
 
                                     </div>
                                 </div>
-                                {UserProgram.pointsAmount >= UserProgram.pointsGoal ? (
+                                {userProgram.pointsAmount >= userProgram.pointsGoal ? (
                                     <div className="flex flex-col items-center">
-                                        <Link
+                                        {/* <Link
                                             className={buttonVariants({
                                                 size: 'sm',
                                                 className: ' text-sm gap-2 ',
                                             })}
-                                            href={`/transaction/${UserProgram.id}`}
+                                            href={`/transaction/${userProgram.id}`}
                                         >
                                             Reclamar premio <Trophy />
-                                        </Link>
+                                        </Link> */}
+
+
+                                        <RedeemButton userProgram={userProgram} />
+
                                     </div>
 
                                 ) : (
