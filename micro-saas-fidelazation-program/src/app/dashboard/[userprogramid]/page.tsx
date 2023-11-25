@@ -1,20 +1,13 @@
 import { db } from "@/db"
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import { notFound, redirect } from "next/navigation"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
 import EditCard from "@/components/EditCard"
 import Overview from "@/components/Overview"
 import Link from "next/link"
-import { ArrowLeft, QrCode } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 import EnrollButton from "@/components/EnrollButton"
+import ShareButton from '../../../components/ShareButton';
 
 interface PageProps {
     params: {
@@ -55,8 +48,8 @@ const Page = async ({ params }: PageProps) => {
             {/* <main className='mx-auto max-w-7xl md:p-10 space-y-5  h-[calc(100vh-3.5rem)]'>
                     <div className='mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0'> */}
             <main className='mx-auto max-w-7xl md:px-5 '>
-                <div className='mt-8 flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-5 sm:flex-row sm:items-center sm:gap-0'>
-                    <h1 className='mb-3 font-bold text-3xl  flex sm:block text-gray-900  '>
+                <div className='mt-8 flex  items-start justify-between   border-b border-gray-200 pb-5  flex-row sm:items-center  '>
+                    <div className='mb-3  flex  flex-row items-center'>
                         <Link className={buttonVariants({
                             size: 'sm',
                             className: 'mt-5',
@@ -64,9 +57,12 @@ const Page = async ({ params }: PageProps) => {
                         })} href='/dashboard' >
                             <ArrowLeft className='ml-2 h-5 w-5' />
                         </Link>
-                        {program.name}
-                    </h1>
+                        <h1 className='font-bold text-3xl mt-3  text-gray-900'>
+                            {program.name}
+                        </h1>
+                    </div>
 
+                    <ShareButton userProgram={userProgram} />
                 </div>
                 <div className="mx-auto max-w-7xl  px-5 ">
                     <EnrollButton userProgram={userProgram} />
@@ -87,7 +83,7 @@ const Page = async ({ params }: PageProps) => {
                         </div>
                     </div>
                 </div>
-            </main>
+            </main >
         </>
     )
 }

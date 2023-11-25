@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import { db } from "@/db";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { TRPCError } from '@trpc/server';
-import TransactionResponseView from '../../components/TransactionResponseView';
+import SuccessView from "../../components/SuccessView";
 
 
 const Page = async (ctx: Params) => {
@@ -29,10 +29,10 @@ const Page = async (ctx: Params) => {
             id: pointId
         }
     })
-    console.log(point)
+    // console.log(point)
 
     return (<>
-        <TransactionResponseView point={point?.points} />
+        <SuccessView point={point?.points} />
     </>)
 }
 

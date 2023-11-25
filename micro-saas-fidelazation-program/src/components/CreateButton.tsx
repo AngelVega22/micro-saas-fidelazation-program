@@ -31,8 +31,8 @@ import { trpc } from "@/app/_trpc/client"
 
 const formSchema = z.object({
     name: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(50, { message: 'Debe tener máximo 50 letras' }),
-    description: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(255, { message: 'Debe tener máximo 255 letras' }),
-    programRules: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(255, { message: 'Debe tener máximo 255 letras' }),
+    description: z.string().max(255, { message: 'Debe tener máximo 255 letras' }),
+    programRules: z.string().min(10, { message: 'Debe tener 10 letras mínimo' }).max(255, { message: 'Debe tener máximo 255 letras' }),
     pointValue: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), { message: "Escribe un número" }),
     reward: z.string().min(2, { message: 'Debe tener 2 letras mínimo' }).max(50, { message: 'Debe tener máximo 50 letras' }),
     pointsGoal: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), { message: "Escribe un número" }),

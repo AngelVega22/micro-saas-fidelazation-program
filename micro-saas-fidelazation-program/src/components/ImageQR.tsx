@@ -50,6 +50,7 @@ const ImageQR = ({ url, description }: imageQRprops) => {
                     Volver
                 </Link>
             </div>
+
         </>
     )
 }

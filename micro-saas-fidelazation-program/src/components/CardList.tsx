@@ -119,18 +119,8 @@ const CardList = ({ UserPrograms, filterValue }: CardListProps) => {
 
                                     </div>
                                 </div>
-                                {userProgram.pointsAmount >= userProgram.pointsGoal ? (
+                                {userProgram.pointsAmount >= userProgram.pointsGoal && userProgram.isActive ? (
                                     <div className="flex flex-col items-center">
-                                        {/* <Link
-                                            className={buttonVariants({
-                                                size: 'sm',
-                                                className: ' text-sm gap-2 ',
-                                            })}
-                                            href={`/transaction/${userProgram.id}`}
-                                        >
-                                            Reclamar premio <Trophy />
-                                        </Link> */}
-
 
                                         <RedeemButton userProgram={userProgram} />
 

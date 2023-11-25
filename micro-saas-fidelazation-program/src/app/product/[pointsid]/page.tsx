@@ -87,7 +87,7 @@ const Page = async ({ params }: PageProps) => {
                                                         <XCircle className="h-4 w-4" />
                                                         <AlertTitle>Error</AlertTitle>
                                                         <AlertDescription>
-                                                            ¡Este perfil es de un negocio!
+                                                            ¡Este perfil es de negocio!
                                                         </AlertDescription>
                                                     </Alert>
                                                 </MaxWidthWrapper  >

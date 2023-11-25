@@ -406,7 +406,42 @@ export const appRouter = router({
         });
         // console.log(newUserProgramPoint)
         return newUserProgramPoint
-    })
+    }),
+
+    // TO TO - Register customer in userProgram
+
+    registerCustomer: publicProcedure.input(z.object({
+        email: z.string()
+            .min(1, { message: "This field has to be filled." })
+            .email("This is not a valid email."),
+        name: z.string().min(2).max(50),
+        pointValue: z.string().refine((pointValue) => !Number.isNaN(parseInt(pointValue, 10)), {
+            message: "Escribe un número"
+        }),
+        reward: z.string(),
+        pointsGoal: z.string().refine((pointsGoal) => !Number.isNaN(parseInt(pointsGoal, 10)), {
+            message: "Escribe un número"
+        }),
+    })).mutation(async ({ input }) => {
+        const dbUser = await db.user.findFirst({
+            where: {
+                email: input.email
+            }
+        })
+        if (dbUser?.role === 'ADMIN')
+            throw new TRPCError({ code: 'BAD_REQUEST' })
+
+        if (!dbUser) {
+            await db.user.create({
+                data: {
+                    id: input.email,
+                    email: input.email,
+                    role: 'USER'
+                },
+            })
+        }
+
+    }),
 });
 
 export type AppRouter = typeof appRouter;

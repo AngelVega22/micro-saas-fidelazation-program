@@ -67,12 +67,22 @@ Here are some tasks that need to be completed or considered for the Loyalty Prog
 - [x] Improve security by adding user authentication and authorization.
 - [ ] Enhance the program's data analytics and reporting capabilities.
 - [ ] Improve user experience
+- [ ] Add types of rules in the registation form and improve it.
+- [ ] CRON JOB to delete no active transaction points.
 
 Prority tasks:
 
-- [ ] Add more business logic.
-- [ ] CRON JOB to delete no active transaction points.
+- [ ] Implement Program registation funcionality.
+- [ ] Add mobile menu.
+- [ ] Configure dates logic.
+- [ ] Define more business logic.
 - [ ] Add Pricing page.
 - [ ] Integrate digital payments.
-- [ ] Add types of rules in the registation form and improve it.
+- [ ] Monetization logic.
 - [ ] Implement a dashboard for business owners to track program performance.
+- [ ] Implement more enviroment variables.
+
+Bugs:
+
+- [x] Registation form validations and edit form validations.
+- [x] No transaction if program is inactive/deleted.

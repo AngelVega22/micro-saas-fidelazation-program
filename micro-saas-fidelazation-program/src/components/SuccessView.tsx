@@ -4,12 +4,12 @@ import Link from "next/link"
 import { buttonVariants } from "./ui/button"
 import { ArrowLeftCircle } from "lucide-react"
 
-interface TransactionResponseView {
+interface SuccessView {
     point: number | undefined
 }
 
 
-const TransactionResponseView = ({ point }: TransactionResponseView) => {
+const SuccessView = ({ point }: SuccessView) => {
 
     return (<>
         <div className="flex flex-col items-center justify-center  mt-11 ">
@@ -35,4 +35,4 @@ const TransactionResponseView = ({ point }: TransactionResponseView) => {
     </>)
 }
 
-export default TransactionResponseView
+export default SuccessView
