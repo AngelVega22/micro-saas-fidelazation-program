@@ -28,9 +28,9 @@ interface registationData {
     userprogramid: string,
     programName: string,
     programId: string,
-    pointValue: number,
+    pointValue: string,
     reward: string,
-    pointsGoal: number,
+    pointsGoal: string,
     email: string | null
 }
 
@@ -39,8 +39,9 @@ interface EnrollFormProps {
     registationData: registationData,
 }
 const EnrollForm = ({ registationData }: EnrollFormProps) => {
-    // console.log(registationData)
-    const { email } = registationData
+
+    const { email, pointValue, pointsGoal, programId, programName, reward, userprogramid } = registationData
+
     const { mutate: registerCustomer, isLoading } = trpc.registerCustomer.useMutation({
         onSuccess: () => {
             if (!email) {
@@ -69,9 +70,15 @@ const EnrollForm = ({ registationData }: EnrollFormProps) => {
 
         const customerEmail = {
             email: values.email,
+            pointValue: pointValue,
+            pointsGoal: pointsGoal,
+            programId: programId,
+            programName: programName,
+            reward: reward,
+            userprogramid: userprogramid
         }
 
-        // registerCustomer(customerEmail)
+        registerCustomer(customerEmail)
     }
     return (<>
         <MaxWidthWrapper>
@@ -119,7 +126,7 @@ const EnrollForm = ({ registationData }: EnrollFormProps) => {
                         <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md">
                             <h1 className="text-3xl font-bold mb-4 text-center text-orange-600">¡Bienvenido!</h1>
                             <div className="flex items-center justify-center mb-6">
-                                <span className="text-8xl text-blue-500">🌟</span>
+                                <span className="text-8xl text-blue-500">🥇</span>
                             </div>
                             <p className="text-lg text-gray-700 text-center">
                                 Estamos emocionados de tenerte como parte de nuestra comunidad.

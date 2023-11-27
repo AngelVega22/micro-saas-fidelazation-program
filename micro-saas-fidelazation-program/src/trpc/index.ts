@@ -414,7 +414,7 @@ export const appRouter = router({
         email: z.string()
             .min(1, { message: "This field has to be filled." })
             .email("This is not a valid email."),
-        name: z.string().min(2).max(50),
+        programName: z.string().min(2).max(50),
         pointValue: z.string().refine((pointValue) => !Number.isNaN(parseInt(pointValue, 10)), {
             message: "Escribe un número"
         }),
@@ -422,6 +422,7 @@ export const appRouter = router({
         pointsGoal: z.string().refine((pointsGoal) => !Number.isNaN(parseInt(pointsGoal, 10)), {
             message: "Escribe un número"
         }),
+        programId: z.string().min(2).max(50),
     })).mutation(async ({ input }) => {
         const dbUser = await db.user.findFirst({
             where: {
@@ -439,7 +440,42 @@ export const appRouter = router({
                     role: 'USER'
                 },
             })
+
+            await db.userProgram.create({
+                data: {
+                    name: input.programName,
+                    userId: input.email,
+                    pointValue: parseInt(input.pointValue),
+                    reward: input.reward,
+                    pointsGoal: parseInt(input.pointsGoal),
+                    programId: input.programId,
+                    updated_at: new Date(),
+                    isActive: true,
+                }
+            })
         }
+
+        const existUserProgram = await db.userProgram.findFirst({
+            where: {
+                userId: dbUser?.id,
+                programId: input.programId
+            }
+        })
+        if (!existUserProgram)
+            await db.userProgram.create({
+                data: {
+                    name: input.programName,
+                    userId: dbUser?.id,
+                    pointValue: parseInt(input.pointValue),
+                    reward: input.reward,
+                    pointsGoal: parseInt(input.pointsGoal),
+                    programId: input.programId,
+                    updated_at: new Date(),
+                    isActive: true,
+                },
+            });
+
+        return existUserProgram
 
     }),
 });

@@ -8,7 +8,7 @@ import ImageQR from '@/components/ImageQR';
 import PrintView from "@/components/PrintView";
 import MaxWidthWrapper from "@/components/maxWidthWrapper";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { XCircle } from "lucide-react";
+import { Loader2, XCircle } from "lucide-react";
 
 const Page = async (ctx: Params) => {
 
@@ -34,6 +34,7 @@ const Page = async (ctx: Params) => {
 
     let userId: string = ''
     let userRole: string = ''
+    let programIdExist: string | undefined = ''
     if (user) {
         if (user !== null) userId = user.id ?? '';
 
@@ -43,6 +44,14 @@ const Page = async (ctx: Params) => {
             }
         })
         if (user !== null) userRole = dbUser?.role ?? '';
+
+        const existUserProgram = await db.userProgram.findFirst({
+            where: {
+                userId: dbUser?.id,
+                programId: programId
+            }
+        })
+        programIdExist = existUserProgram?.programId
     }
 
     const program = await db.program.findFirst({
@@ -52,15 +61,21 @@ const Page = async (ctx: Params) => {
     })
     const programCreator: string | undefined = program?.userCreate
 
+    if (programIdExist && user && programCreator !== user.id) {
+        redirect('/dashboard')
+    }
+
     interface registationData {
         userprogramid: string,
         programName: string,
         programId: string,
-        pointValue: number,
+        pointValue: string,
         reward: string,
-        pointsGoal: number,
+        pointsGoal: string,
         email: string | null
     }
+
+    const email: string | null = user?.email ? user.email : ''
 
     const registationData: registationData =
     {
@@ -70,7 +85,7 @@ const Page = async (ctx: Params) => {
         'pointValue': pointValue,
         'reward': reward,
         'pointsGoal': pointsGoal,
-        'email': ''
+        'email': email
     }
 
     const url = `product?id=${userprogramid}&name=${programName}&programid=${programId}&pointValue=${pointValue}&reward=${reward}&pointsGoal=${pointsGoal}`
@@ -95,7 +110,30 @@ const Page = async (ctx: Params) => {
                         </MaxWidthWrapper  >
                     </div>
                 ) : (
-                    <EnrollForm registationData={registationData} />
+                    <div>
+                        {user && userRole === 'USER' && programIdExist ? (
+                            <div className="max-w-md mx-auto mt-10 p-2 bg-white shadow-lg rounded-lg">
+
+                                <Alert className="py-5">
+                                    <XCircle className="h-4 w-4" />
+                                    <AlertTitle>Error</AlertTitle>
+                                    <AlertDescription>
+                                        ¡Usted ya se encuentra registrado en este programa!
+                                    </AlertDescription>
+
+                                </Alert>
+                                <div className='w-full mt-5 flex justify-center'>
+                                    <div className='flex flex-col items-center gap-2'>
+                                        <Loader2 className='h-8 w-8 animate-spin text-zinc-800' />
+                                        <p>Serás redirigido automáticamente.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        ) : (
+                            <EnrollForm registationData={registationData} />
+                        )}
+                    </div>
                 )}
             </div>
         )}
