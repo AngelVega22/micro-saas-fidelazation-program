@@ -26,6 +26,7 @@ model UserProgram {
   name         String
   isActive     Boolean  @default(true)
   isDeleted    Boolean  @default(false)
+  isExpired    Boolean  @default(false)
   comment      String?  @db.TinyText()
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt

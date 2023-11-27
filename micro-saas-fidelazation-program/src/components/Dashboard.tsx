@@ -13,22 +13,7 @@ import ProductList from "./ProductList"
 import LoyaltyCards from "./LoyaltyCards"
 
 const Dashboard = () => {
-    const [currentlyDeletingUserProgram, setCurrentlyDeletingUserProgram] = useState<string | null>(
-        null
-    )
-    const utils = trpc.useUtils()
-    const { data: UserPrograms, isLoading } = trpc.getUserPrograms.useQuery()
-    const { mutate: deleteUserProgram } = trpc.deleteUserProgram.useMutation({
-        onSuccess: () => {
-            utils.getUserPrograms.invalidate()
-        },
-        onMutate({ id }) {
-            setCurrentlyDeletingUserProgram(id)
-        },
-        onSettled() {
-            setCurrentlyDeletingUserProgram(null)
-        }
-    })
+
     const { data: user } = trpc.authCallback.useQuery()
     const userRole = user?.user?.role
 

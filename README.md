@@ -73,7 +73,8 @@ Here are some tasks that need to be completed or considered for the Loyalty Prog
 Prority tasks:
 
 - [x] Implement Program registation funcionality.
-- [ ] Configure dates logic.
+- [x] Configure dates logic | costumer side.
+- [x] Configure dates logic | business side.
 - [ ] Add Pricing page.
 - [ ] Integrate digital payments.
 - [ ] Monetization logic.

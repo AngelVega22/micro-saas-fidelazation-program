@@ -1,7 +1,7 @@
 "use client"
 
 import { trpc } from "@/app/_trpc/client"
-import { Ghost, Loader2, MessageSquare, Minus, Plus, Trash } from "lucide-react"
+import { Ghost, Leaf, Loader2, MessageSquare, Minus, Plus, Trash } from "lucide-react"
 import Skeleton from "react-loading-skeleton"
 import Link from "next/link"
 import { Button } from "./ui/button"
@@ -27,13 +27,14 @@ const ProductList = () => {
             setCurrentlyDeletingUserProgram(null)
         }
     })
+    const filteredUserPrograms = UserPrograms?.filter(item => !item.isDeleted)
 
     return (<>
         <div>
-            {UserPrograms && UserPrograms?.length !== 0 ? (
+            {filteredUserPrograms && filteredUserPrograms?.length !== 0 ? (
                 <ul className='mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-1'>
-                    {UserPrograms
-                        .filter(userProgram => !userProgram.isDeleted)  // Filtra solo los programas no eliminados
+                    {filteredUserPrograms
+                        // .filter(userProgram => !userProgram.isDeleted)  // Filtra solo los programas no eliminados
                         .sort(
                             (a, b) =>
                                 new Date(b.created_at).getTime() -
@@ -88,8 +89,10 @@ const ProductList = () => {
                                     </div>
 
                                     <div className='flex items-center gap-5'>
-                                        {UserProgram.isActive ? (
+                                        {UserProgram.isActive && !UserProgram.isExpired ? (
                                             <Badge variant="default">Activo</Badge>
+                                        ) : UserProgram.isExpired ? (
+                                            <Badge variant="outline">Vencido</Badge>
                                         ) : (
                                             <Badge variant="outline">Inactivo</Badge>
                                         )}
@@ -106,9 +109,6 @@ const ProductList = () => {
                                             <Loader2 className="h-4 w-4 animate-spin" />
                                         ) : (<Trash className='h-4 w-4' />)}
                                     </Button>
-
-
-
                                 </div>
                             </li>
                         ))}
@@ -117,12 +117,13 @@ const ProductList = () => {
                 <Skeleton height={100} className='my-2' count={5} />
             ) : (
                 <div className='mt-16 flex flex-col items-center gap-2'>
-                    <Ghost className='h-8 w-8 text-zinc-800' />
+                    <Leaf className='h-8 w-8 text-zinc-800' />
                     <h3 className='font-semibold text-xl'>
                         No hay programas por aquí
                     </h3>
                     <p>¡Crea uno!</p>
-                </div>)}
+                </div>
+            )}
 
         </div>
     </>)
