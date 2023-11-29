@@ -26,7 +26,7 @@ const Navbar = () => {
                               variant: 'ghost',
                               size: 'sm',
                            })}>
-                           Pricing
+                           Planes
                         </Link>
                         <LoginLink
                            className={buttonVariants({
@@ -45,6 +45,14 @@ const Navbar = () => {
                      </>
                   ) : (
                      <>
+                        <Link
+                           href='/pricing'
+                           className={buttonVariants({
+                              variant: 'ghost',
+                              size: 'sm',
+                           })}>
+                           Facturación
+                        </Link>
                         <Link
                            href='/dashboard'
                            className={buttonVariants({

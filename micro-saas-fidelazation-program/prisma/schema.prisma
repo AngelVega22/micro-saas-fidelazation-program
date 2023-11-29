@@ -18,6 +18,11 @@ model User {
   created_at   DateTime      @default(now())
   role         Role          @default(USER)
   picture      String?
+  isNewUser    Boolean       @default(true)
+  isActive     Boolean       @default(false)
+  enrollDate   DateTime      @default(now())
+  planId       String?       @default("")
+  Plan         Plan?         @relation(fields: [planId], references: [id])
   UserPrograms UserProgram[]
 }
 
@@ -80,4 +85,24 @@ enum transactionType {
 enum Role {
   USER
   ADMIN
+}
+
+model Plan {
+  id        String    @id @default(cuid())
+  plan      String
+  tagline   String
+  price     Float
+  realPrice Int
+  quota     Int?
+  features  Feature[]
+  User      User[]
+}
+
+model Feature {
+  id       String   @id @default(cuid())
+  text     String
+  footnote String?
+  negative Boolean? @default(false)
+  planId   String
+  Plan     Plan     @relation(fields: [planId], references: [id])
 }

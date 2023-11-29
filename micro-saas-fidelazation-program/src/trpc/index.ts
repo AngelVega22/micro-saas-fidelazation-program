@@ -7,7 +7,6 @@ import { number, z } from 'zod';
 export const appRouter = router({
 
     authCallback: publicProcedure.query(async () => {
-
         const { getUser } = getKindeServerSession()
         const user = getUser()
 
@@ -19,6 +18,7 @@ export const appRouter = router({
                 id: user.id
             }
         })
+
         const dbUserEmail = await db.user.findFirst({
             where: {
                 email: user.email

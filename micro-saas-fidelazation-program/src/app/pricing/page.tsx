@@ -21,15 +21,29 @@ const Page = () => {
     const { getUser } = getKindeServerSession()
     const user = getUser()
 
-    const pricingItems = [
+    interface Feature {
+        text: string;
+        footnote?: string;
+        negative?: boolean;
+    }
+
+    interface PricingItem {
+        plan: string;
+        tagline: string;
+        quota?: number;
+        price: number;
+        features: Feature[];
+    }
+
+    const pricingItems: PricingItem[] = [
         {
             plan: 'Premium',
             tagline: 'Impulsa tu negocio con funciones exclusivas.',
             quota: 10,
-            price: 25.90,
+            price: 9.90,
             features: [
                 {
-                    text: '3 meses',
+                    text: '1 año',
                     footnote:
                         'The maximum amount of pages per PDF-file.',
                 },
@@ -60,7 +74,7 @@ const Page = () => {
             plan: 'Pro',
             tagline: 'Optimiza la lealtad del cliente empresarial.',
             // quota: PLANS.find((p) => p.slug === 'pro')!.quota,
-            price: 19.90,
+            price: 12.90,
             features: [
                 {
                     text: '1 año',
@@ -95,10 +109,10 @@ const Page = () => {
             plan: 'Avanzado',
             tagline: 'Mejora la relación con tus clientes e incrementa tus ventas.',
             // quota: PLANS.find((p) => p.slug === 'pro')!.quota,
-            price: 15.90,
+            price: 19.90,
             features: [
                 {
-                    text: '2 años',
+                    text: '1 año',
                     footnote:
                         'The maximum amount of pages per PDF-file.',
                 },
@@ -148,7 +162,7 @@ const Page = () => {
                                     <div
                                         key={plan}
                                         className={cn(
-                                            'relative rounded-2xl bg-white shadow-lg',
+                                            'relative rounded-xl bg-white shadow-lg transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-100',
                                             {
                                                 'border-2 border-orange-600 shadow-orange-200':
                                                     plan === 'Pro',
@@ -158,30 +172,32 @@ const Page = () => {
                                         )}>
                                         {plan === 'Pro' && (
                                             <div className='absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-gradient-to-r from-orange-600 to-orange-400 px-3 py-2 text-sm font-medium text-white'>
-                                                Recomendado
+                                                Más vendido
                                             </div>
                                         )}
-
-                                        <div className='p-5'>
+                                        <div className='px-5 pt-5 pb-1'>
                                             <h3 className='my-3 text-center font-display text-3xl font-bold'>
                                                 {plan}
                                             </h3>
                                             <p className='text-gray-500'>
                                                 {tagline}
                                             </p>
-                                            <p className='my-5 font-display text-6xl font-semibold'>
-                                                S/{price.toFixed(2)}
+                                            <p className='my-5 font-display text-5xl font-bold'>
+                                                <span className='text-2xl'>S/</span>
+                                                {price.toFixed(2)}
+                                                <span className='text-sm text-center text-gray-500  '>/mes</span>
                                             </p>
-                                            <p className='text-gray-500'>
-                                                por mes
-                                            </p>
+
+                                            <span className='text-md  font-bold text-center text-orange-600 '>
+                                                + 1 mes gratis
+                                            </span>
+
                                         </div>
 
-                                        <div className='flex h-20 items-center justify-center border-b border-t border-gray-200 bg-gray-50'>
+                                        {/* <div className='flex h-10 items-center justify-center border-b border-t border-gray-200 bg-gray-50'>
                                             <div className='flex items-center space-x-1'>
                                                 <p>
-                                                    {/* {quota.toLocaleString()} PDFs/mo
-                          included */}
+
                                                 </p>
 
                                                 <Tooltip delayDuration={300}>
@@ -194,7 +210,41 @@ const Page = () => {
                                                     </TooltipContent>
                                                 </Tooltip>
                                             </div>
+                                        </div> */}
+
+                                        <div className='p-5'>
+                                            {plan === 'Free' ? (
+                                                <Link
+                                                    href={
+                                                        user ? '/dashboard' : '/sign-in'
+                                                    }
+                                                    className={buttonVariants({
+                                                        className: 'w-full',
+                                                        variant: 'secondary',
+                                                    })}>
+                                                    {user ? 'Upgrade now' : 'Empieza gratis'}
+                                                    <ArrowRight className='h-5 w-5 ml-1.5' />
+                                                </Link>
+                                            ) : user ? (
+                                                // <UpgradeButton />
+                                                <div></div>
+                                            ) : (
+                                                <Link
+                                                    href='/api/auth/register'
+                                                    className={buttonVariants({
+                                                        className: 'w-full',
+                                                    })}>
+                                                    {user ? 'Upgrade now' : 'Empieza gratis'}
+                                                    <ArrowRight className='h-5 w-5 ml-1.5' />
+                                                </Link>
+                                            )}
                                         </div>
+                                        <p className='text-gray-400 text-sm mb-5'>
+                                            <span className='text-sm'>S/</span>
+                                            {price + 9.99}
+                                            <span className='text-sm text-center text-gray-400  '>/mes al renovar</span>
+                                        </p>
+                                        <div className='border-t border-gray-200' />
 
                                         <ul className='my-10 space-y-5 px-8'>
                                             {features.map(
@@ -247,34 +297,7 @@ const Page = () => {
                                                 )
                                             )}
                                         </ul>
-                                        <div className='border-t border-gray-200' />
-                                        <div className='p-5'>
-                                            {plan === 'Free' ? (
-                                                <Link
-                                                    href={
-                                                        user ? '/dashboard' : '/sign-in'
-                                                    }
-                                                    className={buttonVariants({
-                                                        className: 'w-full',
-                                                        variant: 'secondary',
-                                                    })}>
-                                                    {user ? 'Upgrade now' : 'Empezar'}
-                                                    <ArrowRight className='h-5 w-5 ml-1.5' />
-                                                </Link>
-                                            ) : user ? (
-                                                // <UpgradeButton />
-                                                <div></div>
-                                            ) : (
-                                                <Link
-                                                    href='/api/auth/register'
-                                                    className={buttonVariants({
-                                                        className: 'w-full',
-                                                    })}>
-                                                    {user ? 'Upgrade now' : 'Empezar'}
-                                                    <ArrowRight className='h-5 w-5 ml-1.5' />
-                                                </Link>
-                                            )}
-                                        </div>
+
                                     </div>
                                 )
                             }
